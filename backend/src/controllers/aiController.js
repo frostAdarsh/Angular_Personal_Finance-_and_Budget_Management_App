@@ -1,35 +1,38 @@
-const { GoogleGenAI } = require('@google/genai');
-const Transaction = require('../models/Transaction');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const catchAsync = require('../utils/catchAsync');
 
-const ai = new GoogleGenAI({});
+// 1. Initialize the Gemini API
+// Make sure you have GEMINI_API_KEY in your .env file!
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-exports.getFinancialInsights = catchAsync(async (req, res) => {
-    const transactions = await Transaction.find({ user: req.user.id })
-        .sort({ date: -1 })
-        .limit(30);
-
-    if (transactions.length === 0) {
-        return res.json({ insight: "You don't have enough transactions yet for AI analysis. Start logging!" });
+exports.getAiInsights = catchAsync(async (req, res) => {
+    // Safety check for the API key
+    if (!process.env.GEMINI_API_KEY) {
+        console.error("❌ ERROR: GEMINI_API_KEY is missing from .env");
+        return res.status(500).json({ message: "Gemini API key is missing from server configuration." });
     }
 
-    const promptData = transactions
-        .map(t => `${t.date.toISOString().split('T')[0]}: ${t.type.toUpperCase()} of $${t.amount} for ${t.category}`)
-        .join('\n');
-    
-    const prompt = `
-        You are an expert financial advisor analyzing a client's recent transaction history. 
-        Based on the data below, provide a short, actionable, 3-bullet-point summary of their spending habits. 
-        Suggest one specific area where they can save money. Keep the tone encouraging and professional.
-        
-        Recent Transactions:
-        ${promptData}
-    `;
+    try {
+        // 2. THE FIX: Upgraded the model string to the current active API version!
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-    });
+        // 3. Create the prompt 
+        const prompt = `
+            You are an expert financial advisor. 
+            The user (${req.user.email}) is asking for financial insights.
+            Please provide 3 actionable, friendly, and concise tips on how to save money, 
+            invest wisely, and stick to a monthly budget. Keep the formatting clean using bullet points.
+        `;
 
-    res.json({ insight: response.text });
+        // 4. Send the prompt to Gemini
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
+
+        // 5. Send the AI text back to your Angular frontend
+        res.json({ insight: responseText });
+
+    } catch (error) {
+        console.error("🔥 GEMINI AI ERROR:", error.message);
+        res.status(500).json({ message: "Failed to generate AI insights." });
+    }
 });

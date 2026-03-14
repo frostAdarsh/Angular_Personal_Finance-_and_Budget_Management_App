@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getFinancialInsights } = require('../controllers/aiController');
+
+// 1. THE FIX: Changed to getAiInsights to match your controller!
+const { getAiInsights } = require('../controllers/aiController');
 const { protect, requirePro } = require('../middlewares/authMiddleware');
 
-
-router.get('/insights', protect, requirePro, getFinancialInsights);
+// 2. THE FIX: Used getAiInsights here too
+router.get('/insights', protect, requirePro, getAiInsights);
 
 module.exports = router;
