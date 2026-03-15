@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // 1. Imported the Router
-import { AiService } from '../../../core/services/ai'; // Ensure path is correct
-import { AuthService } from '../../../core/services/auth'; // Ensure path is correct
+import { Router } from '@angular/router'; 
+import { AiService } from '../../../core/services/ai'; 
+import { AuthService } from '../../../core/services/auth'; 
 
 @Component({
   selector: 'app-insights',
@@ -94,16 +94,14 @@ import { AuthService } from '../../../core/services/auth'; // Ensure path is cor
 export class InsightsComponent implements OnInit {
   private aiService = inject(AiService);
   private authService = inject(AuthService);
-  private router = inject(Router); // 2. Injected the Router
+  private router = inject(Router); 
+  private cdr = inject(ChangeDetectorRef); // The Sledgehammer
 
   isLoading = false;
+  insightText: string | null = null; 
 
   get userEmail() {
     return this.authService.currentUser()?.email;
-  }
-
-  get insightText() {
-    return this.aiService.currentInsight();
   }
 
   ngOnInit() {
@@ -112,15 +110,29 @@ export class InsightsComponent implements OnInit {
 
   generateInsights() {
     this.isLoading = true;
+    this.insightText = null; 
+    
+    // Force UI to show the loading spinner immediately
+    this.cdr.detectChanges(); 
+
     this.aiService.getInsights().subscribe({
-      next: () => {
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching AI insights:', err);
+      next: (response: any) => {
+        console.log("✅ SUCCESS! Raw Backend Data:", response);
         this.isLoading = false;
         
-        // 3. The Magic Bouncer: Catch the 403 and redirect!
+        // Extract the string safely
+        this.insightText = response?.insight || JSON.stringify(response);
+        
+        // Command Angular to paint the text on the screen right NOW!
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => {
+        console.error('❌ Error fetching AI insights:', err);
+        this.isLoading = false;
+        
+        // Force UI to hide the spinner on error
+        this.cdr.detectChanges(); 
+        
         if (err.status === 403) {
           this.router.navigate(['/upgrade']);
         } else {
