@@ -1,59 +1,69 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const catchAsync = require('../utils/catchAsync');
+const Groq = require("groq-sdk");
+const Transaction = require("../models/Transaction");
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+exports.getAiInsights = async (req, res) => {
 
-exports.getAiInsights = catchAsync(async (req, res) => {
-    
-    // =====================================================================
-    // 🛑 TEMPORARY BYPASS: Using mock data due to Google API 'limit: 0'
-    // =====================================================================
-    console.log("🚀 Bypassing Gemini API and sending mock data...");
+  try {
 
-    const mockResponse = `
-Here is your personalized financial plan for **${req.user.email}**:
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY
+    });
 
-* **Save Money:** Set up an automatic transfer to move 10% of your income to a high-yield savings account the exact day you get paid.
-* **Invest Wisely:** Look into low-cost, diversified index funds for long-term, stable growth.
-* **Monthly Budget:** Try the 50/30/20 rule: 50% for essential needs, 30% for lifestyle wants, and 20% dedicated strictly to savings and debt payoff.
-    `;
+    // Fetch user transactions
+    const transactions = await Transaction.find({
+      user: req.user.id
+    });
 
-    // 1. Safely pause the async function for 1.5 seconds
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Calculate category totals
+    const categoryTotals = {};
 
-    // 2. 🛑 CACHE BUSTER: Strictly forbid the browser from caching this request!
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-    
-    // 3. Send the data
-    res.json({ insight: mockResponse });
+    transactions.forEach(t => {
+      const category = t.category;
 
-    // =====================================================================
-    // 🟢 REAL AI CODE (Commented out for now. Uncomment when billing is active!)
-    // =====================================================================
-    /*
-    if (!process.env.GEMINI_API_KEY) {
-        return res.status(500).json({ message: "Gemini API key is missing." });
-    }
+      if (!categoryTotals[category]) {
+        categoryTotals[category] = 0;
+      }
 
-    try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-        const prompt = `
-            You are an expert financial advisor. 
-            The user (${req.user.email}) is asking for financial insights.
-            Please provide 3 actionable, friendly, and concise tips on how to save money, 
-            invest wisely, and stick to a monthly budget. Keep the formatting clean using bullet points.
-        `;
+      categoryTotals[category] += t.amount;
+    });
 
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+    const expenseSummary = Object.entries(categoryTotals)
+      .map(([cat, amount]) => `${cat}: ₹${amount}`)
+      .join("\n");
 
-        res.json({ insight: responseText });
+    const prompt = `
+You are a financial advisor.
 
-    } catch (error) {
-        console.error("🔥 GEMINI AI ERROR:", error.message);
-        res.status(500).json({ message: "Failed to generate AI insights." });
-    }
-    */
-});
+User expense summary:
+
+${expenseSummary}
+
+Analyze spending habits and provide:
+1. 3 insights about spending
+2. 2 ways to save money
+3. 1 investment tip
+`;
+
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile"
+    });
+
+    const aiResponse = completion.choices[0].message.content;
+
+    res.json({
+      insight: aiResponse
+    });
+
+  } catch (error) {
+
+    console.error("AI ERROR:", error);
+
+    res.status(500).json({
+      message: "AI generation failed"
+    });
+
+  }
+};
