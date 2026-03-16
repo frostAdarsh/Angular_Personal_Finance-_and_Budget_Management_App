@@ -1,0 +1,239 @@
+<!-- NAVBAR -->
+<header class="flex justify-between items-center px-8 py-5 bg-white shadow">
+
+  <h1 class="text-2xl font-bold text-[#0F766E]">
+    BudgetFlow
+  </h1>
+
+  <div class="space-x-4">
+
+    <button
+      class="text-gray-700 hover:text-[#10B981] cursor-pointer"
+      (click)="login()">
+      Login
+    </button>
+
+    <button
+      class="px-5 py-2 rounded-lg bg-[#10B981] text-white hover:bg-[#059669] cursor-pointer"
+      (click)="register()">
+      Sign Up
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<!-- HERO -->
+<section
+class="text-center py-36 text-white
+bg-gradient-to-r from-[#0F766E] via-[#10B981] to-[#34D399]">
+
+  <h1 class="text-5xl font-bold mb-6">
+    Smart AI Budget Tracking
+  </h1>
+
+  <p class="text-lg mb-8 max-w-xl mx-auto">
+    Track expenses, analyze spending and receive powerful AI insights
+    to improve your financial health.
+  </p>
+
+  <button
+    class="px-8 py-4 rounded-xl font-semibold bg-white text-[#10B981] hover:bg-gray-100 cursor-pointer"
+    (click)="register()">
+
+    Get Started Free
+
+  </button>
+
+</section>
+
+
+
+<!-- DASHBOARD PREVIEW -->
+<section class="py-24 bg-[#F8FAFC] text-center">
+
+  <h2 class="text-3xl font-bold mb-12 text-[#0F172A]">
+    Powerful Budget Dashboard
+  </h2>
+
+  <div class="flex justify-center">
+
+    <img
+      src="assets/dashboard-preview.png"
+      class="rounded-xl shadow-2xl max-w-[900px] w-full">
+
+  </div>
+
+</section>
+
+
+
+<!-- FEATURES -->
+<section class="py-24 px-10 bg-white">
+
+  <h2 class="text-3xl font-bold text-center mb-16 text-[#0F172A]">
+    Powerful Features
+  </h2>
+
+  <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+
+
+    <!-- Feature 1 -->
+    <div
+      class="p-8 border rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300 text-center">
+
+      <lottie-player
+        src="/aTwo.json"
+        background="transparent"
+        speed="1"
+        style="width:150px;height:150px;margin:auto"
+        autoplay
+        loop>
+      </lottie-player>
+
+      <h3 class="text-xl font-semibold mt-4 mb-3">
+        Expense Tracking
+      </h3>
+
+      <p class="text-gray-600">
+        Track daily spending and categorize transactions easily.
+      </p>
+
+    </div>
+
+
+    <!-- Feature 2 -->
+    <div
+      class="p-8 border rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300 text-center">
+
+      <lottie-player
+        src="/aOne.json"
+        background="transparent"
+        speed="1"
+        style="width:150px;height:150px;margin:auto"
+        autoplay
+        loop>
+      </lottie-player>
+
+      <h3 class="text-xl font-semibold mt-4 mb-3">
+        AI Financial Insights
+      </h3>
+
+      <p class="text-gray-600">
+        AI analyzes your spending habits and suggests improvements.
+      </p>
+
+    </div>
+
+
+    <!-- Feature 3 -->
+    <div
+      class="p-8 border rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300 text-center">
+
+      <lottie-player
+        src="/Data Analysis.json"
+        background="transparent"
+        speed="1"
+        style="width:150px;height:150px;margin:auto"
+        autoplay
+        loop>
+      </lottie-player>
+
+      <h3 class="text-xl font-semibold mb-3">
+        Budget Analytics
+      </h3>
+
+      <p class="text-gray-600">
+        Visualize your spending patterns with charts and reports.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- PRICING -->
+<section class="py-24 bg-[#F8FAFC] text-center">
+
+  <h2 class="text-3xl font-bold mb-16 text-[#0F172A]">
+    Simple Pricing
+  </h2>
+
+  <div class="flex justify-center">
+
+    <div
+      class="bg-white p-10 rounded-xl shadow-2xl w-[420px] border hover:scale-105 transition">
+
+      <h3 class="text-2xl font-bold mb-4">
+        BudgetFlow AI
+      </h3>
+
+      <p class="text-gray-600 mb-6">
+        Unlock powerful AI financial insights
+      </p>
+
+      <div class="text-5xl font-bold text-[#10B981] mb-6">
+        ₹500
+      </div>
+
+      <p class="text-gray-500 mb-8">
+        per month
+      </p>
+
+      <ul class="text-left space-y-3 mb-8">
+
+        <li>✔ AI Spending Analysis</li>
+        <li>✔ Smart Budget Suggestions</li>
+        <li>✔ Premium Insights Dashboard</li>
+
+      </ul>
+
+      <button
+        class="w-full py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] cursor-pointer"
+        (click)="register()">
+
+        Upgrade Now
+        
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- CTA -->
+<section class="text-center py-24 bg-[#10B981] text-white">
+
+  <h2 class="text-3xl font-bold mb-6">
+    Start Managing Your Money Smarter
+  </h2>
+
+  <button
+    class="px-8 py-4 rounded-xl font-semibold bg-white text-[#10B981] hover:bg-gray-100 cursor-pointer"
+    (click)="register()">
+
+    Create Free Account
+
+  </button>
+
+</section>
+
+
+
+<!-- FOOTER -->
+<footer class="text-center py-6 bg-[#0F172A] text-gray-400">
+
+  <p>
+    © 2026 BudgetFlow — AI Personal Finance Dashboard by Aadarsh Mani. All rights reserved.
+  </p>
+
+</footer>
