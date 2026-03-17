@@ -27,7 +27,7 @@ import { AuthService } from '../../../core/services/auth';
           <div class="text-center mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-2">Pro Plan</h2>
             <div class="flex items-center justify-center text-5xl font-black text-gray-900">
-              $9<span class="text-xl font-medium text-gray-500 ml-1">/mo</span>
+              ₹500<span class="text-xl font-medium text-gray-500 ml-1">/mo</span>
             </div>
           </div>
 
