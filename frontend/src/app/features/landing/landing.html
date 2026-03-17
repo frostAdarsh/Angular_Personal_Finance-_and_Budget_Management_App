@@ -51,7 +51,7 @@ bg-gradient-to-r from-[#0F766E] via-[#10B981] to-[#34D399]">
 
 
 
-<!-- DASHBOARD PREVIEW -->
+<!-- DASHBOARD PREVIEW WITH ANIMATION -->
 <section class="py-24 bg-[#F8FAFC] text-center">
 
   <h2 class="text-3xl font-bold mb-12 text-[#0F172A]">
@@ -60,9 +60,18 @@ bg-gradient-to-r from-[#0F766E] via-[#10B981] to-[#34D399]">
 
   <div class="flex justify-center">
 
-    <img
-      src="assets/dashboard-preview.png"
-      class="rounded-xl shadow-2xl max-w-[900px] w-full">
+    <div class="bg-white p-6 rounded-2xl shadow-2xl">
+
+      <lottie-player
+        src="/Dashboard.json"
+        background="transparent"
+        speed="1"
+        style="width:650px;height:420px"
+        autoplay
+        loop>
+      </lottie-player>
+
+    </div>
 
   </div>
 
@@ -198,7 +207,6 @@ bg-gradient-to-r from-[#0F766E] via-[#10B981] to-[#34D399]">
         (click)="register()">
 
         Upgrade Now
-        
 
       </button>
 
