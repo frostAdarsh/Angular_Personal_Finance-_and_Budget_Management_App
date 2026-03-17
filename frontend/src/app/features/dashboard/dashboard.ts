@@ -1,7 +1,6 @@
-import { Component, inject, computed, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 import { AuthService } from '../../core/services/auth';
 import { TransactionService } from '../../core/services/transaction';
@@ -80,7 +79,7 @@ flex items-center justify-center font-bold">
 </div>
 
 <button (click)="logout()"
-class="w-full bg-white text-[#059669] font-semibold rounded-lg py-2">
+class="w-full bg-white text-[#059669] font-semibold rounded-lg py-2 cursor-pointer">
 Logout
 </button>
 
@@ -94,7 +93,7 @@ Logout
 
 <header class="mb-10">
 <h1 class="text-3xl font-extrabold text-gray-800">Financial Overview</h1>
-<p class="text-gray-500">Track spending and receive AI-powered insights.</p>
+<p class="text-gray-500">Track spending and view analytics.</p>
 </header>
 
 
@@ -140,7 +139,7 @@ Logout
 
 <div class="bg-white p-6 rounded-2xl shadow-lg">
 
-<h3 class="font-semibold mb-4">Monthly Expenses</h3>
+<h3 class="font-bold mb-4">Monthly Expenses</h3>
 
 <canvas baseChart
 [data]="monthlyChartData"
@@ -151,7 +150,7 @@ Logout
 
 <div class="bg-white p-6 rounded-2xl shadow-lg">
 
-<h3 class="font-semibold mb-4">Category Breakdown</h3>
+<h3 class="font-bold mb-4">Category Breakdown</h3>
 
 <canvas baseChart
 [data]="categoryChartData"
@@ -162,53 +161,12 @@ Logout
 
 <div class="bg-white p-6 rounded-2xl shadow-lg md:col-span-2">
 
-<h3 class="font-semibold mb-4">Spending Trend</h3>
+<h3 class="font-bold mb-4">Spending Trend</h3>
 
 <canvas baseChart
 [data]="trendChartData"
 [type]="'line'">
 </canvas>
-
-</div>
-
-</div>
-
-
-<!-- AI INSIGHTS -->
-<div class="mt-12">
-
-<h2 class="text-xl font-bold mb-4">
-AI Financial Insights
-</h2>
-
-<div class="bg-gradient-to-r from-indigo-500 to-purple-600
-text-white p-6 rounded-2xl shadow-xl">
-
-<div class="flex justify-between items-center mb-4">
-
-<div>🤖 AI Advisor</div>
-
-<button
-(click)="generateInsights()"
-class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold">
-
-Generate Insights
-
-</button>
-
-</div>
-
-<p *ngIf="loadingAI()">
-Analyzing your transactions...
-</p>
-
-<p *ngIf="aiInsights()">
-{{ aiInsights() }}
-</p>
-
-<p *ngIf="!aiInsights() && !loadingAI()">
-Click generate to analyze your financial behavior.
-</p>
 
 </div>
 
@@ -224,7 +182,6 @@ export class DashboardComponent implements OnInit {
 
 private authService = inject(AuthService);
 private transactionService = inject(TransactionService);
-private http = inject(HttpClient);
 
 
 /* USER */
@@ -264,12 +221,6 @@ this.transactions()
 balance = computed(() =>
 this.totalIncome() - this.totalExpense()
 );
-
-
-/* AI */
-
-aiInsights = signal('');
-loadingAI = signal(false);
 
 
 /* CHART DATA */
@@ -347,30 +298,6 @@ this.trendChartData={
 labels:Object.keys(days),
 datasets:[{data:Object.values(days),label:'Spending'}]
 };
-
-}
-
-
-/* AI */
-
-generateInsights(){
-
-this.loadingAI.set(true);
-
-this.http.get<any>('http://localhost:5000/api/ai/insights')
-.subscribe({
-
-next:(res)=>{
-this.aiInsights.set(res.insight || res.message);
-this.loadingAI.set(false);
-},
-
-error:()=>{
-this.aiInsights.set('Unable to generate AI insights.');
-this.loadingAI.set(false);
-}
-
-});
 
 }
 
