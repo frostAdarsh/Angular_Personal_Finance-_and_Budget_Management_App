@@ -18,16 +18,7 @@ import { AuthService } from './core/services/auth';
 
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 py-4">
-
-      <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-xs font-medium">
-
-        © 2026 BudgetFlow — AI Personal Finance Dashboard by Aadarsh Mani. All rights reserved.
-
-      </div>
-
-    </footer>
+    
 
   </div>
 
