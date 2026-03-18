@@ -10,7 +10,9 @@ const stripeRoutes = require('./routes/stripeRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://budgetflow-frontend.vercel.app"
+}));
 
 
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
